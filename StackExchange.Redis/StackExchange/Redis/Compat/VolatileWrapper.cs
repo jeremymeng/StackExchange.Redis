@@ -10,7 +10,7 @@ namespace StackExchange.Redis
     {
         public static int Read(ref int location)
         {
-#if !DNXCORE50
+#if !DOTNET5_4
             return System.Threading.Thread.VolatileRead(ref location);
 #else
             return System.Threading.Volatile.Read(ref location);
@@ -19,7 +19,7 @@ namespace StackExchange.Redis
 
         public static void Write(ref int address, int value)
         {
-#if !DNXCORE50
+#if !DOTNET5_4
             System.Threading.Thread.VolatileWrite(ref address, value);
 #else
             System.Threading.Volatile.Write(ref address, value);

@@ -417,7 +417,7 @@ namespace StackExchange.Redis.Tests
     {
         public static int Read(ref int location)
         {
-#if !DNXCORE50
+#if !DOTNET5_4
             return Thread.VolatileRead(ref location);
 #else
             return Volatile.Read(ref location);

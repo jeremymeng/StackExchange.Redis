@@ -21,12 +21,12 @@
   "configurations": {
     "Debug": {
       "compilationOptions": {
-        "define": [ "DEBUG", "TRACE", "PLAT_SAFE_CONTINUATIONS" ]
+        "define": [ "DEBUG", "TRACE", "PLAT_SAFE_CONTINUATIONS", "DOTNET5_4" ]
       }
     },
     "Release": {
       "compilationOptions": {
-        "define": [ "TRACE", "PLAT_SAFE_CONTINUATIONS" ]
+        "define": [ "TRACE", "PLAT_SAFE_CONTINUATIONS", "DOTNET5_4" ]
       }
     }
   },
@@ -34,11 +34,11 @@
   "frameworks": {
     "dnxcore50": {
       "dependencies": {
-        "System.Console": "4.0.0-beta-*",
-        "System.Linq.Expressions": "4.0.11-beta-23409",
-        "System.Reflection.Extensions": "4.0.1-beta-23409",
-        "System.Threading.Tasks.Parallel": "4.0.1-beta-23409",
-        "Microsoft.CSharp": "4.0.1-beta-23409",
+        "System.Console": "4.0.0-beta-23516",
+        "System.Linq.Expressions": "4.0.11-beta-23516",
+        "System.Reflection.Extensions": "4.0.1-beta-23516",
+        "System.Threading.Tasks.Parallel": "4.0.1-beta-23516",
+        "Microsoft.CSharp": "4.0.1-beta-23516",
         "nunitlite": "3.0.0"
       }
     }

@@ -38,7 +38,7 @@ namespace BasicTest
                 int number = 0;
                 Action<Task> nonTrivial = delegate
                 {
-#if !DNXCORE50
+#if !DOTNET5_4
                     Thread.SpinWait(5);
 #else
                     for (int i = 0; i < 50; i++)

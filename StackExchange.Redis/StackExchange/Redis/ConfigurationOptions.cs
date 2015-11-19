@@ -30,7 +30,7 @@ namespace StackExchange.Redis
     /// The options relevant to a set of redis connections
     /// </summary>
     public sealed class ConfigurationOptions
-#if !DNXCORE50
+#if !DOTNET5_4
         : ICloneable
 #endif
     {
@@ -143,7 +143,7 @@ namespace StackExchange.Redis
         /// Indicates whether the connection should be encrypted
         /// </summary>
         [Obsolete("Please use .Ssl instead of .UseSsl"),
-#if !DNXCORE50
+#if !DOTNET5_4
             Browsable(false),
 #endif
             EditorBrowsable(EditorBrowsableState.Never)]
@@ -470,7 +470,7 @@ namespace StackExchange.Redis
             }
         }
 
-#if !DNXCORE50
+#if !DOTNET5_4
         static bool IsOption(string option, string prefix)
         {
             return option.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase);
@@ -492,7 +492,7 @@ namespace StackExchange.Redis
             SocketManager = null;
         }
 
-#if !DNXCORE50
+#if !DOTNET5_4
         object ICloneable.Clone() { return Clone(); }
 #endif
 

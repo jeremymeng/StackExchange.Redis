@@ -126,7 +126,7 @@ namespace StackExchange.Redis
 
             // we need a dedicated writer, because when under heavy ambient load
             // (a busy asp.net site, for example), workers are not reliable enough
-#if !DNXCORE50
+#if !DOTNET5_4
             Thread dedicatedWriter = new Thread(writeAllQueues, 32 * 1024); // don't need a huge stack;
             dedicatedWriter.Priority = ThreadPriority.AboveNormal; // time critical
 #else
@@ -221,7 +221,7 @@ namespace StackExchange.Redis
             // SIO_LOOPBACK_FAST_PATH (http://msdn.microsoft.com/en-us/library/windows/desktop/jj841212%28v=vs.85%29.aspx)
             // Speeds up localhost operations significantly. OK to apply to a socket that will not be hooked up to localhost, 
             // or will be subject to WFP filtering.
-#if !DNXCORE50
+#if !DOTNET5_4
             const int SIO_LOOPBACK_FAST_PATH = -1744830448;
 
             // windows only
@@ -340,7 +340,7 @@ namespace StackExchange.Redis
             {
                 OnShutdown(socket);
                 try { socket.Shutdown(SocketShutdown.Both); } catch { }
-#if !DNXCORE50
+#if !DOTNET5_4
                 try { socket.Close(); } catch { }
 #endif
                 try { socket.Dispose(); } catch { }
@@ -424,6 +424,26 @@ namespace StackExchange.Redis
                         break;
                 }
             } while (keepGoing);
+        }
+    }
+
+    internal static class SocketExtensions
+    {
+        internal static IAsyncResult BeginConnect(this Socket socket, string host, int port, AsyncCallback requestCallback, object state)
+        {
+            System.Threading.Tasks.Task t = socket.ConnectAsync(host, port);
+            return System.Threading.Tasks.TaskToApm.Begin(t, requestCallback, state);
+        }
+
+        internal static IAsyncResult BeginConnect(this Socket socket, EndPoint endpoint, AsyncCallback requestCallback, object state)
+        {
+            System.Threading.Tasks.Task t = socket.ConnectAsync(endpoint);
+            return System.Threading.Tasks.TaskToApm.Begin(t, requestCallback, state);
+        }
+
+        internal static void EndConnect(this Socket socket, IAsyncResult asyncResult)
+        {
+            System.Threading.Tasks.TaskToApm.End(asyncResult);
         }
     }
 }

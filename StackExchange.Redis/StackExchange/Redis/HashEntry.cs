@@ -31,7 +31,7 @@ namespace StackExchange.Redis
         /// <summary>
         /// The name of the hash field
         /// </summary>
-#if !DNXCORE50
+#if !DOTNET5_4
         [Browsable(false)]
 #endif
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Please use Name", false)]

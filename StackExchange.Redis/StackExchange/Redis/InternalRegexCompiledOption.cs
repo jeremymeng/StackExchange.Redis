@@ -1,4 +1,4 @@
-﻿#if DNXCORE50
+﻿#if DOTNET5_4
 using System;
 #endif
 using System.Text.RegularExpressions;
@@ -11,7 +11,7 @@ namespace StackExchange.Redis
 
         static InternalRegexCompiledOption()
         {
-#if DNXCORE50
+#if DOTNET5_4
             if (!Enum.TryParse("Compiled", out RegexCompiledOption))
                 RegexCompiledOption = RegexOptions.None;
 #else
@@ -21,7 +21,7 @@ namespace StackExchange.Redis
 
         /// <summary>
         /// Gets the default <see cref="RegexOptions"/> to use.
-        /// <see cref="System.Text.RegularExpressions.RegexOptions.Compiled"/> option isn't available yet for dnxcore50.
+        /// <see cref="System.Text.RegularExpressions.RegexOptions.Compiled"/> option isn't available yet for DOTNET5_4.
         /// This returns <see cref="System.Text.RegularExpressions.RegexOptions.Compiled"/> if it is supported; 
         /// <see cref="System.Text.RegularExpressions.RegexOptions.None"/> otherwise.
         /// </summary>

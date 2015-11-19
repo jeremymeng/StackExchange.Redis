@@ -10,7 +10,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
-#if DNXCORE50
+#if DOTNET5_4
 using System.Threading.Tasks;
 #endif
 
@@ -131,7 +131,7 @@ namespace StackExchange.Redis
             if (outStream != null)
             {
                 multiplexer.Trace("Disconnecting...", physicalName);
-#if !DNXCORE50
+#if !DOTNET5_4
                 try { outStream.Close(); } catch { }
 #endif
                 try { outStream.Dispose(); } catch { }
@@ -139,7 +139,7 @@ namespace StackExchange.Redis
             }
             if (netStream != null)
             {
-#if !DNXCORE50
+#if !DOTNET5_4
                 try { netStream.Close(); } catch { }
 #endif
                 try { netStream.Dispose(); } catch { }
@@ -661,7 +661,7 @@ namespace StackExchange.Redis
                     int space = EnsureSpaceAndComputeBytesToRead();
                     multiplexer.Trace("Beginning async read...", physicalName);
                     var result = netStream.BeginRead(ioBuffer, ioBufferBytes, space, endRead, this);
-#if DNXCORE50
+#if DOTNET5_4
                     Task<int> t = (Task<int>)result;
                     if (t.Status == TaskStatus.RanToCompletion && t.Result == -1)
                     {
@@ -676,7 +676,7 @@ namespace StackExchange.Redis
                     }
                 } while (keepReading);
             }
-#if DNXCORE50
+#if DOTNET5_4
             catch (AggregateException ex)
             {
                 throw ex.InnerException;
@@ -759,7 +759,7 @@ namespace StackExchange.Redis
 
                 int bufferSize = config.WriteBuffer;
                 this.netStream = stream;
-#if !DNXCORE50
+#if !DOTNET5_4
                 this.outStream = bufferSize <= 0 ? stream : new BufferedStream(stream, bufferSize);
 #else
                 this.outStream = stream;
@@ -1096,31 +1096,20 @@ namespace StackExchange.Redis
         }
     }
 
-#if DNXCORE50
+#if DOTNET5_4
     internal static class StreamExtensions
     {
         internal static IAsyncResult BeginRead(this Stream stream, byte[] buffer, int offset, int count, AsyncCallback ac, object state)
         {
-            Task<int> f = Task<int>.Factory.StartNew(_ => {
-                try
-                {
-                    return stream.Read(buffer, offset, count);
-                }
-                catch (IOException ex)
-                {
-                    System.Diagnostics.Trace.WriteLine("Could not connect: " + ex.InnerException.Message);
-                    return -1;
-                }
-            }, state);
-            if (ac != null) f.ContinueWith(res => ac(f));
-            return f;
+            Task<int> f = stream.ReadAsync(buffer, offset, count);
+            return TaskToApm.Begin(f, ac, state);
         }
 
         internal static int EndRead(this Stream stream, IAsyncResult ar)
         {
             try
             {
-                return ((Task<int>)ar).Result;
+                return TaskToApm.End<int>(ar);
             }
             catch (AggregateException ex)
             {
