@@ -297,7 +297,7 @@ namespace StackExchange.Redis
         /// </summary>
         Async = 2
     }
-#if !CORE_CLR
+#if FEATURE_PERFCOUNTER
 
     internal static class PerfCounterHelper
     {
@@ -344,7 +344,8 @@ namespace StackExchange.Redis
             return false;
         }
     }
-    
+#endif
+#if FEATURE_THREADPOOL
     internal class CompletionTypeHelper
     {
 
