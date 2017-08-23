@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>MigratedBookSleeveTestSuite</Description>
-    <TargetFrameworks>net45;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
     <AssemblyName>MigratedBookSleeveTestSuite</AssemblyName>
     <PackageId>MigratedBookSleeveTestSuite</PackageId>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -29,7 +29,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
-    <PackageReference Include="nunit" Version="3.4.1" />
+    <PackageReference Include="nunit" Version="3.7.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
@@ -41,6 +42,10 @@
     <DefineConstants>$(DefineConstants);PLAT_SAFE_CONTINUATIONS;CORE_CLR</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
+    <DefineConstants>$(DefineConstants);PLAT_SAFE_CONTINUATIONS</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <PackageReference Include="System.Console" Version="$(CoreFxVersion)" />
     <PackageReference Include="System.Diagnostics.Debug" Version="$(CoreFxVersion)" />
@@ -50,7 +55,6 @@
     <PackageReference Include="System.Runtime.InteropServices" Version="$(CoreFxVersion)" />
     <PackageReference Include="System.Threading.Tasks.Parallel" Version="$(CoreFxVersion)" />
     <PackageReference Include="Microsoft.CSharp" Version="$(CoreFxVersion)" />
-    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-1" />
   </ItemGroup>
 
 </Project>
