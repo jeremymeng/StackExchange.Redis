@@ -2,7 +2,7 @@
 using Jil;
 using System;
 using System.Collections.Generic;
-#if CORE_CLR
+#if NETSTANDARD1
 using System.Reflection;
 #endif
 

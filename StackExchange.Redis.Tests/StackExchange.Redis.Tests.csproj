@@ -17,7 +17,7 @@
     <DefineConstants>$(DefineConstants);FEATURE_MOQ</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);FEATURE_MOQ;CORE_CLR</DefineConstants>
+    <DefineConstants>$(DefineConstants);FEATURE_MOQ;NETSTANDARD1</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
     <DefineConstants>$(DefineConstants);FEATURE_MOQ</DefineConstants>
