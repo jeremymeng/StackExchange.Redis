@@ -49,6 +49,15 @@ nuget:
 build_script:
 - ps: .\build.ps1 -BuildNumber "$env:APPVEYOR_BUILD_NUMBER" -Version "$env:APPVEYOR_REPO_TAG_NAME" -PullRequestNumber "$env:APPVEYOR_PULL_REQUEST_NUMBER" -CreatePackages $true
 
+before_build:
+- cmd: >-
+    "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\gacutil.exe" -l System.Runtime.Extensions
+
+    dotnet build
+
+- ps: Get-ChildItem -Recurse .\StackExchange.Redis.Tests\bin\Debug\netcoreapp1.0\*.json | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+- ps: Get-ChildItem StackExchange.Redis.Tests\obj\*.json | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
 test: off
 artifacts:
 - path: .\.nupkgs\*.nupkg
