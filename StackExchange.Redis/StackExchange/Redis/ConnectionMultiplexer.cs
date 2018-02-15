@@ -108,7 +108,7 @@ namespace StackExchange.Redis
         {
             string roleInstanceId = null;
             // TODO: CoreCLR port pending https://github.com/dotnet/coreclr/issues/919
-#if !CORE_CLR
+#if !NETSTANDARD1
             try
             {
                 Assembly asm = null;
@@ -605,7 +605,7 @@ namespace StackExchange.Redis
             return false;
         }
 
-#if !CORE_CLR
+#if FEATURE_THREADPOOL
         private void LogLockedWithThreadPoolStats(TextWriter log, string message, out int busyWorkerCount)
         {
             busyWorkerCount = 0;
@@ -647,7 +647,7 @@ namespace StackExchange.Redis
             }
 
             var watch = Stopwatch.StartNew();
-#if !CORE_CLR
+#if FEATURE_THREADPOOL
             int busyWorkerCount;
             LogLockedWithThreadPoolStats(log, "Awaiting task completion", out busyWorkerCount);
 #endif
@@ -657,7 +657,7 @@ namespace StackExchange.Redis
                 var remaining = timeoutMilliseconds - checked((int)watch.ElapsedMilliseconds);
                 if (remaining <= 0)
                 {
-#if !CORE_CLR
+#if FEATURE_THREADPOOL
                     LogLockedWithThreadPoolStats(log, "Timeout before awaiting for tasks", out busyWorkerCount);
 #endif
                     return false;
@@ -666,7 +666,7 @@ namespace StackExchange.Redis
                 var allTasks = Task.WhenAll(tasks).ObserveErrors();
                 var any = Task.WhenAny(allTasks, Task.Delay(remaining)).ObserveErrors();
                 bool all = await any.ForAwait() == allTasks;
-#if !CORE_CLR
+#if FEATURE_THREADPOOL
                 LogLockedWithThreadPoolStats(log, all ? "All tasks completed cleanly" : "Not all tasks completed cleanly", out busyWorkerCount);
 #endif
                 return all;
@@ -684,7 +684,7 @@ namespace StackExchange.Redis
                     var remaining = timeoutMilliseconds - checked((int)watch.ElapsedMilliseconds);
                     if (remaining <= 0)
                     {
-#if !CORE_CLR
+#if FEATURE_THREADPOOL
                         LogLockedWithThreadPoolStats(log, "Timeout awaiting tasks", out busyWorkerCount);
 #endif
                         return false;
@@ -697,7 +697,7 @@ namespace StackExchange.Redis
                     { }
                 }
             }
-#if !CORE_CLR
+#if FEATURE_THREADPOOL
             LogLockedWithThreadPoolStats(log, "Finished awaiting tasks", out busyWorkerCount);
 #endif
             return false;
@@ -2065,13 +2065,14 @@ namespace StackExchange.Redis
                             {
                                 add("Key-HashSlot", "keyHashSlot", message.GetHashSlot(this.ServerSelectionStrategy).ToString());
                             }
-#if !CORE_CLR
+#if FEATURE_THREADPOOL
                             string iocp, worker;
                             int busyWorkerCount = GetThreadPoolStats(out iocp, out worker);
                             add("ThreadPool-IO-Completion", "IOCP", iocp);
                             add("ThreadPool-Workers", "WORKER", worker);
                             data.Add(Tuple.Create("Busy-Workers", busyWorkerCount.ToString()));
-
+#endif
+#if FEATURE_PERFCOUNTER
                             if (IncludePerformanceCountersInExceptions)
                             {
                                 add("Local-CPU", "Local-CPU", GetSystemCpuPercent());
@@ -2112,7 +2113,7 @@ namespace StackExchange.Redis
             }
         }
 
-#if !CORE_CLR
+#if FEATURE_PERFCOUNTER
         internal static string GetThreadPoolAndCPUSummary(bool includePerformanceCounters)
         {
             string iocp, worker;
@@ -2130,7 +2131,8 @@ namespace StackExchange.Redis
             }
             return "unavailable";
         }
-
+#endif
+#if FEATURE_THREADPOOL
         private static int GetThreadPoolStats(out string iocp, out string worker)
         {
             //BusyThreads =  TP.GetMaxThreads() –TP.GetAVailable();

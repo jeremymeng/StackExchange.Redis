@@ -31,7 +31,7 @@ namespace StackExchange.Redis
     /// The options relevant to a set of redis connections
     /// </summary>
     public sealed class ConfigurationOptions
-#if !CORE_CLR
+#if !NETSTANDARD1
         : ICloneable
 #endif
     {
@@ -160,7 +160,7 @@ namespace StackExchange.Redis
         /// Indicates whether the connection should be encrypted
         /// </summary>
         [Obsolete("Please use .Ssl instead of .UseSsl"),
-#if !CORE_CLR
+#if !NETSTANDARD1
             Browsable(false),
 #endif
             EditorBrowsable(EditorBrowsableState.Never)]
@@ -379,7 +379,7 @@ namespace StackExchange.Redis
                 responseTimeout = responseTimeout,
                 defaultDatabase = defaultDatabase,
                 ReconnectRetryPolicy = reconnectRetryPolicy,
-#if !CORE_CLR
+#if !NETSTANDARD1
                 SslProtocols = SslProtocols,
 #endif
             };
@@ -516,7 +516,7 @@ namespace StackExchange.Redis
             }
         }
 
-#if !CORE_CLR
+#if !NETSTANDARD1
         static bool IsOption(string option, string prefix)
         {
             return option.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase);
@@ -538,7 +538,7 @@ namespace StackExchange.Redis
             SocketManager = null;
         }
 
-#if !CORE_CLR
+#if !NETSTANDARD1
         object ICloneable.Clone() { return Clone(); }
 #endif
 
@@ -640,7 +640,7 @@ namespace StackExchange.Redis
                         case OptionKeys.DefaultDatabase:
                             defaultDatabase = OptionKeys.ParseInt32(key, value);
                             break;
-#if !CORE_CLR
+#if !NETSTANDARD1
                         case OptionKeys.SslProtocols:
                             SslProtocols = OptionKeys.ParseSslProtocols(key, value);
                             break;
